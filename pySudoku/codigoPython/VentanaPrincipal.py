@@ -6,13 +6,7 @@
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
-
-
 from PyQt4 import QtCore, QtGui
-from Sudoku import Ui_sudoku
-from Puntajes import Ui_Puntajes
-import sys
-import Image
 from fileinput import close
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -412,14 +406,14 @@ class Ui_Principal(QtGui.QMainWindow):
         self.bEntrar.setIconSize(QtCore.QSize(100, 100))
         self.bEntrar.setObjectName(_fromUtf8("bEntrar"))
         self.verticalLayout_2.addWidget(self.bEntrar)
-        self.bPuntajes_2 = QtGui.QCommandLinkButton(self.widget1)
-        self.bPuntajes_2.setText(_fromUtf8(""))
+        self.bPuntajes = QtGui.QCommandLinkButton(self.widget1)
+        self.bPuntajes.setText(_fromUtf8(""))
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap(_fromUtf8(":/iconos/score.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.bPuntajes_2.setIcon(icon1)
-        self.bPuntajes_2.setIconSize(QtCore.QSize(100, 100))
-        self.bPuntajes_2.setObjectName(_fromUtf8("bPuntajes_2"))
-        self.verticalLayout_2.addWidget(self.bPuntajes_2)
+        self.bPuntajes.setIcon(icon1)
+        self.bPuntajes.setIconSize(QtCore.QSize(100, 100))
+        self.bPuntajes.setObjectName(_fromUtf8("bPuntajes_2"))
+        self.verticalLayout_2.addWidget(self.bPuntajes)
         Principal.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(Principal)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 681, 25))
@@ -431,28 +425,10 @@ class Ui_Principal(QtGui.QMainWindow):
 
         self.retranslateUi(Principal)
         QtCore.QMetaObject.connectSlotsByName(Principal)
-        self.connect(self.bEntrar, QtCore.SIGNAL("clicked()"), self.abrirEntrar)
-        self.connect(self.bPuntajes_2, QtCore.SIGNAL("clicked()"), self.abrirPuntajes)
 
     def retranslateUi(self, Principal):
         Principal.setWindowTitle(_translate("VentanaPrincipal", "VENTANA PRINCIPAL", None))
         self.labelJugador_2.setText(_translate("VentanaPrincipal", "Nombre Jugador", None))
         self.labelJugador.setText(_translate("VentanaPrincipal", "Dificultad", None))
-        self.bEntrar.setToolTip(_translate("VentanaPrincipal", "Hacer Trampa", None))
-        self.bPuntajes_2.setToolTip(_translate("VentanaPrincipal", "Hacer Trampa", None))
-
-    def abrirEntrar(self):
-        self.close()
-        Sudoku = QtGui.QMainWindow()
-        ui = Ui_sudoku()
-        ui.setupUi(Sudoku)
-        Sudoku.show()
-        ui.exec_()
-    
-    def abrirPuntajes(self):
-        self.close()
-        Puntajes = QtGui.QWidget()
-        ui = Ui_Puntajes()
-        ui.setupUi(Puntajes)
-        Puntajes.show()
-        ui.exec_()
+        self.bEntrar.setToolTip(_translate("VentanaPrincipal", "JUGAR", None))
+        self.bPuntajes.setToolTip(_translate("VentanaPrincipal", "PUNTAJES DEL JUEGO", None))

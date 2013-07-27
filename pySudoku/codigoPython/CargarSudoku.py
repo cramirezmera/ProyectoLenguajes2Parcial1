@@ -6,9 +6,7 @@
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
-
 from PyQt4 import QtCore, QtGui
-
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -23,7 +21,7 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class Ui_CargarSudoku(object):
+class Ui_CargarSudoku(QtGui.QMainWindow):
     def setupUi(self, CargarSudoku):
         CargarSudoku.setObjectName(_fromUtf8("CargarSudoku"))
         CargarSudoku.resize(670, 471)
@@ -235,14 +233,3 @@ class Ui_CargarSudoku(object):
         self.bcargarCargarJuego.setToolTip(_translate("CargarSudoku", "Hacer Trampa", None))
         self.bsalirCargarJuego.setToolTip(_translate("CargarSudoku", "Hacer Trampa", None))
         self.labelJugador.setText(_translate("CargarSudoku", "Jugador", None))
-
-import Image
-
-if __name__ == "__main__":
-    import sys
-    app = QtGui.QApplication(sys.argv)
-    CargarSudoku = QtGui.QMainWindow()
-    ui = Ui_CargarSudoku()
-    ui.setupUi(CargarSudoku)
-    CargarSudoku.show()
-    sys.exit(app.exec_())

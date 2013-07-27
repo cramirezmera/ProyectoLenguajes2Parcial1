@@ -6,11 +6,7 @@
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
-
 from PyQt4 import QtCore, QtGui
-from CargarSudoku import Ui_CargarSudoku
-import Image
-import sys
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -681,35 +677,19 @@ class Ui_sudoku(QtGui.QMainWindow):
 
         self.retranslateUi(sudoku)
         QtCore.QMetaObject.connectSlotsByName(sudoku)
-        self.connect(self.cargarJuego, QtCore.SIGNAL("clicked()"), self.cargar)
 
     def retranslateUi(self, sudoku):
         sudoku.setWindowTitle(_translate("sudoku", "sudoku", None))
         self.labelNivel.setText(_translate("sudoku", "NIVEL", None))
-        self.verificar.setToolTip(_translate("sudoku", "Hacer Trampa", None))
-        self.nuevoJuego.setToolTip(_translate("sudoku", "Hacer Trampa", None))
-        self.borrarJuego.setToolTip(_translate("sudoku", "Hacer Trampa", None))
-        self.comprobar.setToolTip(_translate("sudoku", "Hacer Trampa", None))
-        self.guardarJuego.setToolTip(_translate("sudoku", "Hacer Trampa", None))
-        self.salir.setToolTip(_translate("sudoku", "Hacer Trampa", None))
-        self.resolverJuego.setToolTip(_translate("sudoku", "Hacer Trampa", None))
-        self.cargarJuego.setToolTip(_translate("sudoku", "Hacer Trampa", None))
+        self.verificar.setToolTip(_translate("sudoku", "VERIFICAR", None))
+        self.nuevoJuego.setToolTip(_translate("sudoku", "NUEVOJUEGO", None))
+        self.borrarJuego.setToolTip(_translate("sudoku", "BORRARJUEGO", None))
+        self.comprobar.setToolTip(_translate("sudoku", "COMPROBAR", None))
+        self.guardarJuego.setToolTip(_translate("sudoku", "GUARDARJUEGO", None))
+        self.salir.setToolTip(_translate("sudoku", "SALIR", None))
+        self.resolverJuego.setToolTip(_translate("sudoku", "resolverJuego", None))
+        self.cargarJuego.setToolTip(_translate("sudoku", "CARGARJUEGO", None))
         self.menuMenu.setTitle(_translate("sudoku", "Menu", None))
         self.actionQuit.setText(_translate("sudoku", "Quit", None))
         self.actionHelp.setText(_translate("sudoku", "Help", None))
 
-    def cargar(self):
-        #self.close()
-        CargarJ = QtGui.QMainWindow()
-        uiC = Ui_CargarSudoku()
-        uiC.setupUi(CargarJ)
-        CargarJ.show()
-        uiC.exec_()
-        
-if __name__ == "__main__":
-    app = QtGui.QApplication(sys.argv)
-    sudoku = QtGui.QWidget()
-    ui = Ui_sudoku()
-    ui.setupUi(sudoku)
-    sudoku.show()
-    sys.exit(app.exec_())

@@ -6,9 +6,7 @@
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
-
 from PyQt4 import QtCore, QtGui
-
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -223,8 +221,7 @@ class Ui_Puntajes(object):
     def retranslateUi(self, Puntajes):
         Puntajes.setWindowTitle(_translate("Puntajes", "Form", None))
 
-import Image
-
+'''
 if __name__ == "__main__":
     import sys
     app = QtGui.QApplication(sys.argv)
@@ -232,4 +229,4 @@ if __name__ == "__main__":
     ui = Ui_Puntajes()
     ui.setupUi(Puntajes)
     Puntajes.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec_())'''
