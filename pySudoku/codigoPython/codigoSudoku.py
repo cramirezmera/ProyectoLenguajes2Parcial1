@@ -9,14 +9,24 @@ class MyformSudoku(QtGui.QMainWindow):
         QtGui.QWidget.__init__(self, parent)
         self.uiS = Ui_sudoku()
         self.uiS.setupUi(self)
+        self.initGui()
         
         #Cargar Partida
         self.connect(self.uiS.cargarJuego, QtCore.SIGNAL("clicked()"), self.funcionCargar)
         #Salir del sudoku
         self.connect(self.uiS.salir, QtCore.SIGNAL("clicked()"), self.funcionSalir)
-        
-        #iniciar
+        #iniciar juego
         self.connect(self.uiS.nuevoJuego, QtCore.SIGNAL("clicked()"), self.iniciarJuego)
+        
+    def initGui(self): 
+        self.text = []
+        for i in range(9):
+            for j in range(9):
+                
+                self.valor = QtGui.QTextEdit(None)
+                self.text.append(self.valor)
+                self.uiS.numberPad.addWidget(self.valor, i, j)   
+              
         
     def iniciarJuego(self):
         self.inicialtiempo()
@@ -44,15 +54,17 @@ class MyformSudoku(QtGui.QMainWindow):
         self.uiS.lcdseg.display(QString("%2").arg(self.seg))
         self.uiS.lcdmsg.display(QString("%3").arg(self.miliseg))    
     
-    def usuario(self, nombre, nivel):
+    def obtenerNombreNivel(self, nombre, nivel):
         self.uiS.textJugador.setText(QString("%1").arg(nombre))
+        self.uiS.textJugador.setEnabled(False)
         self.uiS.textNivel.setText(QString("%1").arg(nivel))
+        self.uiS.textNivel.setEnabled(False)
         
     def funcionSalir(self):
         exit()
 
     def funcionCargar(self):
         self.hide()
-        myappS = MyformCargarSudoku()
-        myappS.show()
-        myappS.exec_()
+        self.cargarS = MyformCargarSudoku()
+        self.cargarS.setCargar(self)
+        self.cargarS.show()
