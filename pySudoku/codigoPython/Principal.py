@@ -6,7 +6,7 @@ Created on 15/07/2013
 import sys
 import Image
 from PyQt4 import QtGui
-from codigoVentanaP import Myform
+from pyVentanaP import Myform
 
 def main():
     app = QtGui.QApplication(sys.argv)
