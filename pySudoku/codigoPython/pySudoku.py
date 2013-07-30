@@ -35,6 +35,8 @@ class MyformSudoku(QtGui.QMainWindow):
         self.connect(self.uiS.resolverJuego, QtCore.SIGNAL("clicked()"), self.resolverJueg)
         #Verificar (HACER TRAMPA)
         self.connect(self.uiS.verificar, QtCore.SIGNAL("clicked()"), self.verificarJuego)
+        #Guardar
+        self.connect(self.uiS.guardarJuego, QtCore.SIGNAL("clicked()"), self.guardarJueg)
         
     ##Convierte un String a Int 
     def toInt(self,num):
@@ -110,11 +112,13 @@ class MyformSudoku(QtGui.QMainWindow):
         else:
             QtGui.QMessageBox.information(self,"Respuesta", "La solucion no es valida")            
     
+    ##Seter un entero al QTextEdit
     def setDisplayValue(self, i, j, v):
         self.num = (i*9)+j
         self.listaCeldas[self.num].setText(QString("%1").arg(v))
         self.listaCeldas[self.num].SetAlignment(QtCore.Qt.AlignRight)
     
+    ##Obtener un entero al QTextEdit
     def getDisplayValue(self, i, j):
         self.num = (i*9)+j
         self.obtenervalor = self.toInt((self.listaCeldas[self.num].toPlainText()))
@@ -123,7 +127,7 @@ class MyformSudoku(QtGui.QMainWindow):
         else:
             return(self.toInt((self.listaCeldas[self.num].toPlainText())))
     
-    #Juego Nuevo
+    ##Juego Nuevo
     def iniciarJuego(self):
         self.cont = 0
         self.aleatorio = 0
@@ -193,6 +197,7 @@ class MyformSudoku(QtGui.QMainWindow):
                     self.listaCeldas[self.num].setAlignment(QtCore.Qt.AlignRight)
                 self.cont +=1        
              
+    #Inicializar las variables para el cronometro
     def inicialtiempo(self):
         self.timer = QTimer()
         self.timer.setInterval(1000)
@@ -271,7 +276,49 @@ class MyformSudoku(QtGui.QMainWindow):
             self.cargarS.show()
         else:
             QtGui.QMessageBox.information(self, "MENSAJE", "No existen Partidas Guardadas", "ACEPTAR")
-       
+
+    #GuardarPartida
+    def guardarJueg(self):
+        self.timer.stop()
+        self.nomJugador = self.uiS.textJugador.text()
+        self.nivel = self.uiS.textNivel.text()
+        self.sMin = QtCore.QString.number(self.uiS.lcdmin.intValue())
+        self.sSeg = QtCore.QString.number(self.uiS.lcdseg.intValue())
+        self.sMiliseg = QtCore.QString.number(self.uiS.lcdmsg.intValue())
+        self.info = ""
+        self.banderaGuardar = 0
+        self.matrizGuardar = []
+        #Actualizar la matriz
+        for i in range(9):
+            for j in range(9):
+                self.num = (i*9)+j
+                
+                self.matrizGuardar.append(self.listaCeldas[self.num].toPlainText())
+                if (self.matrizGuardar[self.num] != ""): self.banderaGuardar = 1
+        
+        if (self.banderaGuardar == 0):
+            QtGui.QMessageBox.information(self, "Guardar-Sudoku", "No existen datos a GUARDAR", "ACEPTAR")
+        else:
+            #encriptarS()
+            for i in range(9):
+                for j in range(9):
+                    self.num = (i*9)+j
+                    self.info = self.info+self.matrizGuardar[self.num]+","
+            
+            self.mFilename = QtCore.QString("guadar.txt")
+            self.mFile = QtCore.QFile(self.mFilename)
+            self.mFile.open(QtCore.QIODevice.Text | QtCore.QIODevice.Append)
+            if not(self.mFile.isOpen()):    
+                return
+            
+            self.txtstr = QtCore.QTextStream(self.mFile)
+            self.txtstr << self.nomJugador+"/"+self.nivel+"/"+self.sMin+":"+self.sSeg+":"+self.sMiliseg+"/"+self.info+"\n"
+            self.mFile.flush()
+            self.mFile.close()
+            
+            QtGui.QMessageBox.information(self, "Guardar-Sudoku", "La partida ha sido guardada \nJUGADOR: "+self.nomJugador.toUpper(),"ACEPTAR")
+            self.hide()
+        
     #Verificar (Hacer trampa)
     def verificarJuego(self):
         self.cont = 0
