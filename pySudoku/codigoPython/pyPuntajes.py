@@ -9,11 +9,6 @@ class MyformPuntaje(QtGui.QMainWindow):
         self.connect(self.uiP.pVolver, QtCore.SIGNAL("clicked()"), self.volverVentana)
         
     def setPuntajes(self):
-        self.valores = QtCore.QStringList()
-        self.nomJugador = QtCore.QString()
-        self.nivelC = QtCore.QString()
-        self.crono = QtCore.QString()
-        self.datosSudoku = QtCore.QString()
         self.mFilename = QtCore.QString("guardar.txt")
         
         self.mFile = QtCore.QFile(self.mFilename)
@@ -33,23 +28,23 @@ class MyformPuntaje(QtGui.QMainWindow):
                 self.crono = self.valores[2]
                 self.datosSudoku = self.valores[3]
                 
-                self.valorC =QtCore.QStringList()
                 self.valorC = self.crono.split(":")
-                self.mim = self.valorC[0].toDouble()
-                self.seg = self.valorC[1].toDouble()
-                self.mseg = self.valorC[2].toDouble()
-                
+                self.min = int(self.valorC[0])
+                self.seg = int(self.valorC[1])
+                self.mseg = int(self.valorC[2])
+                               
                 self.puntaje = 0
                 
                 if (self.nivelC == "Juvenil"):
-                    self.puntaje = 90*(self.min+self.seg+self.mseg)/3
+                    self.puntaje = 90 * (self.min + self.seg  +self.mseg)/3
                 elif (self.nivelC == "Profesional"):
-                    self.puntaje = 90*(self.min+self.seg+self.mseg)/2
+                    self.puntaje = 90 *(self.min + self.seg + self.mseg)/2
                 elif (self.nivelC == "Experto"):
-                    self.puntaje = 90*(self.min+self.seg+self.mseg)
+                    self.puntaje = 90 *(self.min + self.seg + self.mseg)
                 
-                self.str = QtCore.QString(self.puntaje)
-                self.uiP.textPuntajes.toPlainText(self.nomJugador.toUpper()+"\t"+self.nivelC+"\t\t"+self.str+"\n")
+                print(self.puntaje)
+                self.strc = QtCore.QString.number(self.puntaje)
+                self.uiP.textPuntajes.insertPlainText(self.nomJugador.toUpper()+"\t"+self.nivelC+"\t\t"+self.strc+"\n")
                 self.uiP.textPuntajes.setDisabled(True)
             
     def setVentanaPrincipal(self, v):

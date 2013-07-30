@@ -241,12 +241,7 @@ class MyformSudoku(QtGui.QMainWindow):
         self.comboB = QtGui.QComboBox()
         self.cargarS = MyformCargarSudoku()
         self.cargarS.ventanaCargar(self)
-        
-        self.valores = QtCore.QStringList()
-        self.nomJugador = QtCore.QString()
-        self.nivelC = QtCore.QString()
-        self.crono = QtCore.QString()
-        self.datosSudoku = QtCore.QString()
+              
         self.mFilename = QtCore.QString("guardar.txt")
         
         self.mFile = QtCore.QFile(self.mFilename)
@@ -255,6 +250,7 @@ class MyformSudoku(QtGui.QMainWindow):
             if not(self.mFile.isOpen()):
                 return
             self.txtstr = QtCore.QTextStream(self.mFile)
+            
             while not(self.txtstr.atEnd()):
                 self.datosSudoku = self.txtstr.readLine()
                 self.mFile.flush()
@@ -268,7 +264,7 @@ class MyformSudoku(QtGui.QMainWindow):
                 
                 if (self.uiS.textNivel.text() == self.nivelC):
                     self.comboB.addItem(self.nomJugador)
-                self.cont = self.cont+1
+                self.cont +=1
             self.hide()
             self.jugador = QtCore.QString(self.uiS.textJugador.text())
             self.nivel = QtCore.QString(self.uiS.textNivel.text())
@@ -305,7 +301,7 @@ class MyformSudoku(QtGui.QMainWindow):
                     self.num = (i*9)+j
                     self.info = self.info+self.matrizGuardar[self.num]+","
             
-            self.mFilename = QtCore.QString("guadar.txt")
+            self.mFilename = QtCore.QString("guardar.txt")
             self.mFile = QtCore.QFile(self.mFilename)
             self.mFile.open(QtCore.QIODevice.Text | QtCore.QIODevice.Append)
             if not(self.mFile.isOpen()):    
