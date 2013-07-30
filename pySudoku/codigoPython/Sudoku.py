@@ -1,11 +1,4 @@
-# -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'sudoku.ui'
-#
-# Created: Fri Jul 12 10:31:08 2013
-#      by: PyQt4 UI code generator 4.10
-#
-# WARNING! All changes made in this file will be lost!
 from PyQt4 import QtCore, QtGui
 
 try:
@@ -34,18 +27,6 @@ class Ui_sudoku(QtGui.QMainWindow):
         self.numberPad = QtGui.QGridLayout(self.gridLayoutWidget)
         self.numberPad.setMargin(0)
         self.numberPad.setObjectName(_fromUtf8("numberPad"))
-        '''self.campo = QtGui.QTextEdit(self.gridLayoutWidget)
-        self.campo.setObjectName(_fromUtf8("textEdit"))
-        self.numberPad.addWidget(self.campo, 0, 0, 1, 1)
-        
-        self.textEdit = QtGui.QTextEdit(self.gridLayoutWidget)
-        self.textEdit.setObjectName(_fromUtf8("textEdit"))
-        self.numberPad.addWidget(self.textEdit, 0, 1, 1, 1)
-        self.label = QtGui.QLabel(self.centralWidget)
-        self.label.setGeometry(QtCore.QRect(0, -30, 681, 501))
-        self.label.setText(_fromUtf8(""))
-        self.label.setPixmap(QtGui.QPixmap(_fromUtf8(":/iconos/Fondo1.png")))
-        self.label.setObjectName(_fromUtf8("label"))'''
         
         self.panelArriba = QtGui.QLabel(self.centralWidget)
         self.panelArriba.setGeometry(QtCore.QRect(0, 0, 681, 61))
@@ -687,7 +668,7 @@ class Ui_sudoku(QtGui.QMainWindow):
         QtCore.QMetaObject.connectSlotsByName(sudoku)
 
     def retranslateUi(self, sudoku):
-        sudoku.setWindowTitle(_translate("sudoku", "sudoku", None))
+        sudoku.setWindowTitle(_translate("sudoku", "Sudoku", None))
         self.labelNivel.setText(_translate("sudoku", "NIVEL", None))
         self.verificar.setToolTip(_translate("sudoku", "Hacer Trampa", None))
         self.nuevoJuego.setToolTip(_translate("sudoku", "Iniciar Sudoku", None))

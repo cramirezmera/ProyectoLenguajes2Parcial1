@@ -219,14 +219,6 @@ class Ui_Puntajes(object):
         QtCore.QMetaObject.connectSlotsByName(Puntajes)
 
     def retranslateUi(self, Puntajes):
-        Puntajes.setWindowTitle(_translate("Puntajes", "Form", None))
+        Puntajes.setWindowTitle(_translate("Puntajes", "Puntajes", None))
+        self.pVolver.setText(_translate("Puntajes", "RETROCEDER", None))
 
-'''
-if __name__ == "__main__":
-    import sys
-    app = QtGui.QApplication(sys.argv)
-    Puntajes = QtGui.QWidget()
-    ui = Ui_Puntajes()
-    ui.setupUi(Puntajes)
-    Puntajes.show()
-    sys.exit(app.exec_())'''
