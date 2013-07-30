@@ -37,16 +37,11 @@ class Myform(QtGui.QMainWindow):
 
     def abrirEntrar(self):
         self.bandera = 0
-        self.valores =QtCore.QStringList()
-        self.nomJugador = QtCore.QString()
-        self.nivelC = QtCore.QString()
-        self.crono = QtCore.QString()
-        self.datosSudoku = QtCore.QString()
         self.mFilename = QtCore.QString("guardar.txt")
         
         self.mFile = QtCore.QFile(self.mFilename)
         if(self.mFile.exists()):
-            self.mFile.open(QtCore.QFile.Text | QtCore.QFile.ReadOnly)
+            self.mFile.open(QtCore.QIODevice.Text | QtCore.QIODevice.ReadOnly)
             if not(self.mFile.isOpen()):
                 return
             self.txtstr = QtCore.QTextStream(self.mFile)

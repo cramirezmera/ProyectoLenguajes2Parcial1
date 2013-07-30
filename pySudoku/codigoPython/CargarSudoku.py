@@ -229,7 +229,7 @@ class Ui_CargarSudoku(QtGui.QMainWindow):
         QtCore.QMetaObject.connectSlotsByName(CargarSudoku)
 
     def retranslateUi(self, CargarSudoku):
-        CargarSudoku.setWindowTitle(_translate("CargarSudoku", "MainWindow", None))
-        self.bcargarCargarJuego.setToolTip(_translate("CargarSudoku", "Hacer Trampa", None))
-        self.bsalirCargarJuego.setToolTip(_translate("CargarSudoku", "Hacer Trampa", None))
+        CargarSudoku.setWindowTitle(_translate("CargarSudoku", "Cargar Juego", None))
+        self.bcargarCargarJuego.setToolTip(_translate("CargarSudoku", "Cargar Partida", None))
+        self.bsalirCargarJuego.setToolTip(_translate("CargarSudoku", "Retroceder", None))
         self.labelJugador.setText(_translate("CargarSudoku", "Jugador", None))

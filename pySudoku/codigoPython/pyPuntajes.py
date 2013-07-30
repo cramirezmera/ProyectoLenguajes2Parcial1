@@ -13,7 +13,7 @@ class MyformPuntaje(QtGui.QMainWindow):
         
         self.mFile = QtCore.QFile(self.mFilename)
         if(self.mFile.exists()):
-            self.mFile.open(QtCore.QFile.Text | QtCore.QFile.ReadOnly)
+            self.mFile.open(QtCore.QIODevice.Text | QtCore.QIODevice.ReadOnly)
             if not(self.mFile.isOpen()):
                 return
             self.txtstr = QtCore.QTextStream(self.mFile)
@@ -41,8 +41,7 @@ class MyformPuntaje(QtGui.QMainWindow):
                     self.puntaje = 90 *(self.min + self.seg + self.mseg)/2
                 elif (self.nivelC == "Experto"):
                     self.puntaje = 90 *(self.min + self.seg + self.mseg)
-                
-                print(self.puntaje)
+       
                 self.strc = QtCore.QString.number(self.puntaje)
                 self.uiP.textPuntajes.insertPlainText(self.nomJugador.toUpper()+"\t"+self.nivelC+"\t\t"+self.strc+"\n")
                 self.uiP.textPuntajes.setDisabled(True)
