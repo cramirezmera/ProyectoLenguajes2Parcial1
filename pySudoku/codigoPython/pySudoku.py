@@ -20,7 +20,6 @@ class MyformSudoku(QtGui.QMainWindow):
         self.listaCeldas = []
         self.initGui()
         # ***************************
-        #self.encriptarS()
         self.desabilitarBotones()
         
         #Cargar Partida
@@ -58,10 +57,11 @@ class MyformSudoku(QtGui.QMainWindow):
         self.uiS.borrarJuego.setDisabled(False)
         self.uiS.resolverJuego.setDisabled(False)
         
-    def toInt(self,num):
+    def toInt(self,cadena):
     ##Convierte un String a Int 
         try:
-            return int(num)
+            print(type(""+cadena))
+            return int(cadena)
         except exceptions.ValueError:
             return 0
         
@@ -69,11 +69,13 @@ class MyformSudoku(QtGui.QMainWindow):
     def initGui(self): 
         for i in range(9):
             for j in range(9):
-                self.num = (i*9)+j
-                self.celda = QtGui.QTextEdit(self.uiS.gridLayoutWidget)
-                self.listaCeldas.append(self.celda)
-                self.uiS.numberPad.addWidget(self.celda, i,j,1,1)
-                QtCore.QObject.connect(self.listaCeldas[self.num], QtCore.SIGNAL("textChanged(QString)"), self.correccionInGame)
+                num = (i*9)+j
+                celda = QtGui.QTextEdit(self.uiS.gridLayoutWidget)
+                self.listaCeldas.append(celda)
+                self.listaCeldas[num].setDisabled(True)
+                self.uiS.numberPad.addWidget(celda, i,j)
+                
+                self.listaCeldas[num].textChanged.connect(self.correccionInGame)
                 
         self.pintarTablero()
 
@@ -82,19 +84,19 @@ class MyformSudoku(QtGui.QMainWindow):
     def pintarTablero(self):
         for i in range(9):
             for j in range(9):
-                self.num = (i*9)+j
+                num = (i*9)+j
                 #Si coincide la respuesta se pintara azul sino coincide se pintara de rojo el cuadro
-                self.indi = i / 3
-                self.indj = j / 3
+                indi = i / 3
+                indj = j / 3
                 
-                if((self.indi == self.indj) or ((self.indi+self.indj) == 2)):
-                    self.paleta = self.listaCeldas[self.num].palette()
-                    self.paleta.setColor(QtGui.QPalette.Base, QtGui.QColor(170, 170, 255))
-                    self.listaCeldas[self.num].setPalette(self.paleta)
+                if((indi == indj) or ((indi + indj) == 2)):
+                    paleta = self.listaCeldas[num].palette()
+                    paleta.setColor(QtGui.QPalette.Base, QtGui.QColor(170, 170, 255))
+                    self.listaCeldas[num].setPalette(paleta)
                 else:
-                    self.paleta = self.listaCeldas[self.num].palette()
-                    self.paleta.setColor(QtGui.QPalette.Base, QtGui.QColor(255, 255, 255))
-                    self.listaCeldas[self.num].setPalette(self.paleta)                
+                    paleta = self.listaCeldas[num].palette()
+                    paleta.setColor(QtGui.QPalette.Base, QtGui.QColor(255, 255, 255))
+                    self.listaCeldas[num].setPalette(paleta)                
                     
     #Actualizar Cronometro
     def update(self):
@@ -113,97 +115,94 @@ class MyformSudoku(QtGui.QMainWindow):
 
     #Setear datos de Cargar Partida
     def setCargar(self, datos, nivel, cronometro, nombre):
-        self.datosCargados = datos
-        self.cuenta = 0
-        self.cont = 33
-        self.valores = self.datosCargados.split(",")
+        datosCargados = datos
+        cuenta = 0
+        cont = 33
+        valores = datosCargados.split(",")
         
         for i in range(9):
             for j in range(9):
-                self.num = (i*9)+j
-                self.val = ord(str(self.valores[self.cuenta]))
-                print(self.val)
-                if(int(self.val) == 33):
-                    self.listaCeldas[self.num].setDisabled(False)
-                    self.listaCeldas[self.num].setText("")
+                num = (i*9)+j
+                val = ord(str(valores[cuenta]))
+                if(int(val) == 33):
+                    self.listaCeldas[num].setDisabled(False)
+                    self.listaCeldas[num].setText("")
                 else:
                     #Desencripta Pantilla del sudoku
-                    if(self.toInt(self.val)%2 == 0):
-                        self.opera = math.sqrt(self.toInt(self.val) - self.cont)
+                    if(self.toInt(val)%2 == 0):
+                        opera = math.sqrt(self.toInt(val) - cont)
                     else:
-                        self.opera = math.sqrt(2 * (self.toInt(self.val) - self.cont))
+                        opera = math.sqrt(2 * (self.toInt(val) - cont))
                     
-                    self.listaCeldas[self.num].setTextColor(QtCore.Qt.blue)
-                    self.listaCeldas[self.num].setText(QtCore.QString.number(self.opera))
-                    self.listaCeldas[self.num].setDisabled(True)
-                self.listaCeldas[self.num].setAlignment(QtCore.Qt.AlignRight)
-                self.cuenta += 1
+                    self.listaCeldas[num].setTextColor(QtCore.Qt.blue)
+                    self.listaCeldas[num].setText(QtCore.QString.number(opera))
+                    self.listaCeldas[num].setDisabled(True)
+                self.listaCeldas[num].setAlignment(QtCore.Qt.AlignRight)
+                cuenta += 1
         self.uiS.textJugador.setText(nombre)
         self.uiS.textJugador.setEnabled(False)
         self.uiS.textNivel.setText(nivel)
         self.uiS.textNivel.setEnabled(False)
         
-        self.valor = cronometro.split(":")
-        self.minutos = self.toInt(self.valor[0])
-        self.segundos = self.toInt(self.valor[1])
-        self.milisegundos = self.toInt(self.valor[2])
+        valor = cronometro.split(":")
+        minutos = self.toInt(valor[0])
+        segundos = self.toInt(valor[1])
+        milisegundos = self.toInt(valor[2])
         
-        self.min = self.minutos
-        self.seg = self.segundos
-        self.miliseg = self.milisegundos
+        self.min = minutos
+        self.seg = segundos
+        self.miliseg = milisegundos
         
         self.inicialtiempo()
         self.show()      
 
-    ## Boton comprobrar
-
-
+        ## Boton comprobrar
     def comprobar(self):
-        self.banderavalida = 1
+        banderavalida = 1
         
         #Validacion numeros del 1 al 9 en las filas
         for i in range(9):
-            self.sumatoriah = 0
-            self.productoh = 1
+            sumatoriah = 0
+            productoh = 1
             for j in range(9):
-                self.sumatoriah = self.sumatoriah + self.getDisplayValue(i, j)
-                self.productoh = self.productoh * self.getDisplayValue(i, j)
-            if((self.sumatoriah == 45) and (self.productoh == 362880)):
-                self.banderavalida = 1
+                sumatoriah = sumatoriah + self.getDisplayValue(i, j)
+                productoh = productoh * self.getDisplayValue(i, j)
+            if((sumatoriah == 45) and (productoh == 362880)):
+                banderavalida = 1
             else:
-                self.banderavalida = 0
+                banderavalida = 0
                 break
         #Validacion numeros del 1 al 9 en las columnas
         for j in range(9):
-            self.sumatoriav = 0
-            self.productov = 1
+            sumatoriav = 0
+            productov = 1
             for i in range(9):
-                self.sumatoriav = self.sumatoriav + self.getDisplayValue(i, j)
-                self.productov = self.productov * self.getDisplayValue(i, j)
-            if((self.sumatoriav == 45) and (self.productov == 362880)):
-                self.banderavalida = 1
+                sumatoriav += self.getDisplayValue(i, j)
+                productov *=  self.getDisplayValue(i, j)
+            if((sumatoriav == 45) and (productov == 362880)):
+                banderavalida = 1
             else:
-                self.banderavalida = 0
+                banderavalida = 0
                 break
         for x in range(9):
-            self.sumatoriacuad = 0
-            self.productocuad = 1
-            self.despx = (x/3)*3
-            self.despy = (x%3)*3
+            sumatoriacuad = 0
+            productocuad = 1
+            despx = (x/3)*3
+            despy = (x%3)*3
             
             for i in range(3):
                 for j in range(3):
-                    self.sumatoriacuad = self.sumatoriacuad + self.getDisplayValue(i+self.despx, j+self.despy)
-                    self.productocuad = self.productocuad * self.getDisplayValue(i+self.despx, j+self.despy)
+                    sumatoriacuad = sumatoriacuad + self.getDisplayValue(i+despx, j+despy)
+                    productocuad = productocuad * self.getDisplayValue(i+despx, j+despy)
             
-            if((self.sumatoriacuad == 45) and (self.productocuad == 362880)):
-                self.banderavalida = 1
+            if((sumatoriacuad == 45) and (productocuad == 362880)):
+                banderavalida = 1
             else:
                 self.banderavalida = 0
                 break
         
         #comprobacion de validacion en general
-        if (self.banderavalida == 1):
+        if (banderavalida == 1):
             self.timer.stop()
             QtGui.QMessageBox.information(self,"Respuesta", "La solucion es valida")
         else:
@@ -211,89 +210,90 @@ class MyformSudoku(QtGui.QMainWindow):
     
     ##Seter un entero al QTextEdit
     def setDisplayValue(self, i, j, v):
-        self.num = (i*9)+j
-        self.listaCeldas[self.num].setText(QString("%1").arg(v))
-        self.listaCeldas[self.num].SetAlignment(QtCore.Qt.AlignRight)
+        num = (i*9)+j
+        self.listaCeldas[num].setText(QString("%1").arg(v))
+        self.listaCeldas[num].SetAlignment(QtCore.Qt.AlignRight)
 
     ##Obtener un entero al QTextEdit
     def getDisplayValue(self, i, j):
-        self.num = (i*9)+j
-        self.obtenervalor = self.toInt((self.listaCeldas[self.num].toPlainText()))
-        if ( self.obtenervalor == 0):
-            return 0
-        else:
-            return(self.toInt((self.listaCeldas[self.num].toPlainText())))
+        num = (i*9)+j
+        obtenervalor = self.toInt((self.listaCeldas[num].toPlainText()))
+        return obtenervalor
     
     ##Juego Nuevo
     def iniciarJuego(self):
         self.habilitarBotones()
-        self.cont = 0
-        self.aleatorio = 0
+        cont = 0
+        aleatorio = 0
         self.miliseg = 0
         self.seg = 0
         self.min = 0
         
         ##Semilla del aleatorio#
-        self.seed = QtCore.QTime()
-        self.seed.start()
-        QtCore.qsrand(self.seed.msec())
-        self.niveles = self.uiS.textNivel.text()
+        seed = QtCore.QTime()
+        seed.start()
+        QtCore.qsrand(seed.msec())
+        niveles = self.uiS.textNivel.text()
         
-        if(self.niveles == "Juvenil"):  self.valores = plantilla1.split(",")
-        elif(self.niveles == "Profesional"):  self.valores = plantilla2.split(",")
-        elif(self.niveles == "Experto"):  self.valores = plantilla3.split(",")
+        if(niveles == "Juvenil"):  self.valores = plantilla1.split(",")
+        elif(niveles == "Profesional"):  self.valores = plantilla2.split(",")
+        elif(niveles == "Experto"):  self.valores = plantilla3.split(",")
         
         for i in range(9):
             for j in range(9):
-                self.num = (i*9)+j
-                self.aleatorio = randint(0,10)
+                num = (i*9)+j
+                aleatorio = randint(0,10)
                 
-                if(self.niveles == "Juvenil"):
-                    if(self.aleatorio <= 6):
-                        self.listaCeldas[self.num].setTextColor(QtCore.Qt.blue)
-                        self.listaCeldas[self.num].setText(self.valores[self.cont])
-                        self.listaCeldas[self.num].setDisabled(True)
+                if(niveles == "Juvenil"):
+                    if(aleatorio <= 6):
+                        self.listaCeldas[num].setTextColor(QtCore.Qt.blue)
+                        self.listaCeldas[num].setText(self.valores[cont])
+                        self.listaCeldas[num].setDisabled(True)
                     else:
-                        self.listaCeldas[self.num].setDisabled(False)
-                        self.listaCeldas[self.num].setText("")
-                elif(self.niveles == "Profesional"):
-                    if(self.aleatorio <= 4):
-                        self.listaCeldas[self.num].setTextColor(QtCore.Qt.blue)
-                        self.listaCeldas[self.num].setText(self.valores[self.cont])
-                        self.listaCeldas[self.num].setDisabled(True)
+                        self.listaCeldas[num].setDisabled(False)
+                        self.listaCeldas[num].setText("")
+                elif(niveles == "Profesional"):
+                    if(aleatorio <= 4):
+                        self.listaCeldas[num].setTextColor(QtCore.Qt.blue)
+                        self.listaCeldas[num].setText(self.valores[cont])
+                        self.listaCeldas[num].setDisabled(True)
                     else:
-                        self.listaCeldas[self.num].setDisabled(False)
-                        self.listaCeldas[self.num].setText("")
-                elif(self.niveles == "Experto"):
-                    if(self.aleatorio <= 3):
-                        self.listaCeldas[self.num].setTextColor(QtCore.Qt.blue)
-                        self.listaCeldas[self.num].setText(self.valores[self.cont])
-                        self.listaCeldas[self.num].setDisabled(True)
+                        self.listaCeldas[num].setDisabled(False)
+                        self.listaCeldas[num].setText("")
+                elif(niveles == "Experto"):
+                    if(aleatorio <= 3):
+                        self.listaCeldas[num].setTextColor(QtCore.Qt.blue)
+                        self.listaCeldas[num].setText(self.valores[cont])
+                        self.listaCeldas[num].setDisabled(True)
                     else:
-                        self.listaCeldas[self.num].setDisabled(False)
-                        self.listaCeldas[self.num].setText("")
-                self.listaCeldas[self.num].setAlignment(QtCore.Qt.AlignRight)
-                self.cont += 1
+                        self.listaCeldas[num].setDisabled(False)
+                        self.listaCeldas[num].setText("")
+                self.listaCeldas[num].setAlignment(QtCore.Qt.AlignRight)
+                cont += 1
         
         self.inicialtiempo()    #Reemplaza a update
 
     def resolverJueg(self):
-        self.cont = 0   
-        self.niveles = self.uiS.textNivel.text()
+        ######Desabilito el boton Guardar######
+        self.uiS.guardarJuego.setDisabled(True)
+        #######################################
+        
+        cont = 0   
+        niveles = self.uiS.textNivel.text()
         self.timer.stop()
         
-        if(self.niveles == "Juvenil"):  self.valores = plantilla1.split(",")
-        elif(self.niveles == "Profesional"):  self.valores = plantilla2.split(",")
-        elif(self.niveles == "Experto"):  self.valores = plantilla3.split(",")
+        if(niveles == "Juvenil"):  self.valores = plantilla1.split(",")
+        elif(niveles == "Profesional"):  self.valores = plantilla2.split(",")
+        elif(niveles == "Experto"):  self.valores = plantilla3.split(",")
         
         for i in range(9):
             for j in range(9):
-                self.num = (i*9)+j
-                if(self.listaCeldas[self.num].isEnabled()):
-                    self.listaCeldas[self.num].setDisabled(True)
-                    self.listaCeldas[self.num].setText(self.valores[self.cont])
-                    self.listaCeldas[self.num].setAlignment(QtCore.Qt.AlignRight)
-                self.cont +=1        
+                num = (i*9)+j
+                if(self.listaCeldas[num].isEnabled()):
+                    self.listaCeldas[num].setDisabled(True)
+                    self.listaCeldas[num].setText(self.valores[cont])
+                    self.listaCeldas[num].setAlignment(QtCore.Qt.AlignRight)
+                cont +=1        
              
     #Inicializar las variables para el cronometro
     def inicialtiempo(self):
@@ -312,6 +312,7 @@ class MyformSudoku(QtGui.QMainWindow):
         self.uiS.textNivel.setEnabled(False) 
     
     def Salir(self):
+        #QtGui.QMessageBox.information(QWidget, QString, QString, buttons=QMessageBox_Ok, defaultButton=QMessageBox_NoButton)
         exit()
 
     def borrarJueg(self):
@@ -324,46 +325,39 @@ class MyformSudoku(QtGui.QMainWindow):
         
         for i in range(9):
             for j in range(9):
-                self.num = (i*9)+j
-                self.listaCeldas[self.num].setText("")
+                num = (i*9)+j
+                self.listaCeldas[num].setText("")
         
     def CargarJuego(self):
-        self.cont = 0
-        #self.comboB = QtGui.QComboBox()
+        self.habilitarBotones()
         self.cargarS = MyformCargarSudoku()
-        self.bandera = 0
-        self.mFilename = QtCore.QString("guardar.txt")
+        bandera = 0
+        nombre = "guardar.txt"
+       
+        mFilename = QtCore.QString(nombre)
         
-        self.mFile = QtCore.QFile(self.mFilename)
-        if(self.mFile.exists()):
-            self.mFile.open(QtCore.QIODevice.Text | QtCore.QIODevice.ReadOnly)
-            if not(self.mFile.isOpen()):
+        mFile = QtCore.QFile(mFilename)
+        if(mFile.exists()):
+            mFile.open(QtCore.QIODevice.Text | QtCore.QIODevice.ReadOnly)
+            if not(mFile.isOpen()):
                 return
-            self.txtstr = QtCore.QTextStream(self.mFile)
+            txtstr = QtCore.QTextStream(mFile)
             
-            while not(self.txtstr.atEnd()):
-                self.datosSudoku = self.txtstr.readLine()
-                self.mFile.flush()
-                self.mFile.close()
+            while not(txtstr.atEnd()):
+                datosSudoku = txtstr.readLine()
+                mFile.flush()
+                mFile.close()
                 
-                self.valores = self.datosSudoku.split("/")
-                self.nomJugador = self.valores[0]
-                self.nivelC = self.valores[1]
-                self.crono = self.valores[2]
-                self.datosSudoku = self.valores[3]
+                valores = datosSudoku.split("/")
+                nivelC = valores[1]#Obtengo el Nivel
                 
-                if (self.uiS.textNivel.text() == self.nivelC):
-                    self.bandera += 1#
-                    #self.comboB.addItem(self.nomJugador)
-                #self.cont +=1
-            if(self.bandera != 0):
+                if (self.uiS.textNivel.text() == nivelC):
+                    bandera += 1
+            if(bandera != 0):
                 self.hide()
-            #self.jugador = (self.uiS.textJugador.text())
-                self.nivel = self.uiS.textNivel.text()
-                print(self.nivel)
-            #self.cargarS.setCombo(self.comboB, self.cont, self.jugador, self.nivel)
+                nivel = self.uiS.textNivel.text()
                 self.cargarS.ventanaCargar(self)
-                self.cargarS.obtenerPartidasGuardadas(self.nivel)
+                self.cargarS.obtenerPartidasGuardadas(nivel)
                 self.cargarS.show()
             else:
                 QtGui.QMessageBox.information(self, "MENSAJE", "No existen Partidas Guardadas \nde nivel "+self.uiS.textNivel.text(), "ACEPTAR")
@@ -373,158 +367,160 @@ class MyformSudoku(QtGui.QMainWindow):
     #GuardarPartida
     def guardarJueg(self):
         self.timer.stop()
-        self.nomJugador = self.uiS.textJugador.text()
-        self.nivel = self.uiS.textNivel.text()
-        self.sMin = QtCore.QString.number(self.uiS.lcdmin.intValue())
-        self.sSeg = QtCore.QString.number(self.uiS.lcdseg.intValue())
-        self.sMiliseg = QtCore.QString.number(self.uiS.lcdmsg.intValue())
-        self.info = ""
-        self.banderaGuardar = 0
+        nomJugador = self.uiS.textJugador.text()
+        nivel = self.uiS.textNivel.text()
+        sMin = QtCore.QString.number(self.uiS.lcdmin.intValue())
+        sSeg = QtCore.QString.number(self.uiS.lcdseg.intValue())
+        sMiliseg = QtCore.QString.number(self.uiS.lcdmsg.intValue())
+        info = ""
+        banderaGuardar = 0
         
         #Actualizar la matriz
         for i in range(9):
             for j in range(9):
-                self.num = (i*9)+j
+                num = (i*9)+j
                 
-                matrizGuardar.append(self.listaCeldas[self.num].toPlainText())
-                if (matrizGuardar[self.num] != ""): self.banderaGuardar = 1
+                matrizGuardar.append(self.listaCeldas[num].toPlainText())
+                if (matrizGuardar[num] != ""): banderaGuardar = 1
         
-        if (self.banderaGuardar == 0):
+        if (banderaGuardar == 0):
             QtGui.QMessageBox.information(self, "Guardar-Sudoku", "No existen datos a GUARDAR", "ACEPTAR")
         else:
             self.encriptarS()
             for i in range(9):
                 for j in range(9):
-                    self.num = (i*9)+j
-                    self.info = self.info+matrizGuardar[self.num]+","
+                    num = (i*9)+j
+                    info = info+matrizGuardar[num]+","
             
-            self.mFilename = QtCore.QString("guardar.txt")
-            self.mFile = QtCore.QFile(self.mFilename)
-            self.mFile.open(QtCore.QIODevice.Text | QtCore.QIODevice.Append)
-            if not(self.mFile.isOpen()):    
+            mFilename = QtCore.QString("guardar.txt")
+            mFile = QtCore.QFile(mFilename)
+            mFile.open(QtCore.QIODevice.Text | QtCore.QIODevice.Append)
+            if not(mFile.isOpen()):    
                 return
             
-            self.txtstr = QtCore.QTextStream(self.mFile)
-            self.txtstr << self.nomJugador+"/"+self.nivel+"/"+self.sMin+":"+self.sSeg+":"+self.sMiliseg+"/"+self.info+"\n"
-            self.mFile.flush()
-            self.mFile.close()
+            txtstr = QtCore.QTextStream(mFile)
+            txtstr << nomJugador+"/"+nivel+"/"+sMin+":"+sSeg+":"+sMiliseg+"/"+info+"\n"
+            mFile.flush()
+            mFile.close()
             
-            QtGui.QMessageBox.information(self, "Guardar-Sudoku", "La partida ha sido guardada \nJUGADOR: "+self.nomJugador.toUpper(),"ACEPTAR")
-            self.hide()
+            QtGui.QMessageBox.information(self, "Guardar-Sudoku", "La partida ha sido guardada \nJUGADOR: "+nomJugador.toUpper(),"ACEPTAR")
+            self.close()
         
     #Verificar (Hacer trampa)
     def verificarJuego(self):
-        self.cont = 0
-        self.niveles  = self.uiS.textNivel.text()
+        cont = 0
+        niveles  = self.uiS.textNivel.text()
         
-        if(self.niveles == "Juvenil"):  self.valores = plantilla1.split(",")
-        if(self.niveles == "Profesional"):  self.valores = plantilla2.split(",")
-        if(self.niveles == "Experto"):  self.valores = plantilla3.split(",")
+        if(niveles == "Juvenil"):  valores = plantilla1.split(",")
+        if(niveles == "Profesional"):  valores = plantilla2.split(",")
+        if(niveles == "Experto"):  valores = plantilla3.split(",")
         
         for i in range(9):
             for j in range(9):
-                self.num = (i*9)+j
-                self.celda = self.listaCeldas[self.num]
-                if((self.celda.isEnabled()) and (self.getDisplayValue(i,j) != 0) and (self.getDisplayValue(i,j) != (self.toInt(self.valores[self.cont])))):
-                    self.paleta = self.celda.palette()
-                    self.paleta.setColor(QtGui.QPalette.Base, QtGui.QColor(255,150,150))
-                    self.celda.setPalette(self.paleta)
+                num = (i*9)+j
+                celda = self.listaCeldas[num]
+                if((celda.isEnabled()) and (self.getDisplayValue(i,j) != 0) and (self.getDisplayValue(i,j) != (self.toInt(valores[cont])))):
+                    paleta = celda.palette()
+                    paleta.setColor(QtGui.QPalette.Base, QtGui.QColor(255,150,150))
+                    celda.setPalette(paleta)
                     
-                if((self.celda.isEnabled()) and (self.getDisplayValue(i,j) != 0) and (self.getDisplayValue(i,j) == (self.toInt(self.valores[self.cont])))):
-                    self.paleta = self.celda.palette()
-                    self.paleta.setColor(QtGui.QPalette.Base, QtGui.QColor(120,255,120))
-                    self.celda.setPalette(self.paleta)
-                self.cont += 1
+                if((celda.isEnabled()) and (self.getDisplayValue(i,j) != 0) and (self.getDisplayValue(i,j) == (self.toInt(valores[cont])))):
+                    paleta = celda.palette()
+                    paleta.setColor(QtGui.QPalette.Base, QtGui.QColor(120,255,120))
+                    celda.setPalette(paleta)
+                cont += 1
     
     #Encriptar Partida de Sudoku
     def encriptarS(self):
-        self.cont = 33
-        self.num1 = 0
-        self.numT = 0
+        cont = 33
+        num1 = 0
+        numT = 0
         
         for i in range(9):
             for j in range(9):
-                self.num = (i*9)+j
+                num = (i*9)+j
                 
-                self.var = self.toInt(matrizGuardar[self.num])
-                self.num1 = (self.var * self.var)
+                var = self.toInt(matrizGuardar[num])
+                num1 = (var * var)
                 
-                if ((self.toInt( matrizGuardar[self.num] )%2) == 0 ):
-                    self.numT = (self.num1/2) + self.cont 
+                if ((self.toInt( matrizGuardar[num] )%2) == 0 ):
+                    numT = (num1/2) + cont 
                 else:
-                    self.numT = self.num1 + self.cont
-                matrizGuardar[self.num] = (str(chr(self.numT)))
-                print("Prueba: "+str(chr(self.numT))+"  "+str(self.numT))
+                    numT = num1 + cont
+                matrizGuardar[num] = (str(chr(numT)))
 
     #Correccion Cuadrante
     def CorreccionCuadrante(self,i,j):
-        self.num = (i*9)+j
-        self.despx = (i/3) * 3
-        self.despy = (j/3) * 3
+        num = (i*9)+j
+        despy_0 = (i/3) * 3
+        despx_0 = (j/3) * 3
         
-        for self.despx in range(self.despx + 3):
-            for self.despy in range(self.despy + 3):
-                self.num1 = (self.despx * 3) + 3
-                if ((self.despy != i) and (self.despx != j)):
-                    if(self.getDisplayValue(i, j) == self.getDisplayValue(self.despx, self.despy)):
-                        self.paleta = self.listaCeldas[self.num].palette()
-                        self.paleta.setColor(QtGui.QPalette.Base, QtGui.QColor(255, 150, 150))
-                        self.listaCeldas[self.num].setPalette(self.paleta)
-                        self.listaCeldas[self.num1].setPalette(self.paleta)
+        for despy in range(despy_0, despy_0 + 3):
+            for despx in range(despx_0, despx_0 + 3):
+                num1 = (despy * 3) + despx
+                if ((despy != i) and (despx != j)):
+                    if(self.getDisplayValue(i,j) == self.getDisplayValue(despy, despx)):
+                        paleta = self.listaCeldas[num].palette()
+                        paleta.setColor(QtGui.QPalette.Base, QtGui.QColor(255, 150, 150))
+                        self.listaCeldas[num].setPalette(paleta)
+                        self.listaCeldas[num1].setPalette(paleta)
                         QtGui.QMessageBox.information(self, "Advertencia", "Este numero ya fue ingresado en el cuadrante")
+                        self.listaCeldas[num].setText("")
                         return
                     else:
                         self.pintarTablero()
                         
     #Correccion Columna                
     def CorreccionColumna(self, i, j):
-        self.num = (i*9)+j
+        num = (i*9)+j
         for k in range(9):
-            self.num1 = (k*9)+j
+            num1 = (k*9)+j
             if(k != i):
-                if(self.getDisplayValue(i, j) == self.getDisplayValue(k, j)):
-                    self.paleta = self.listaCeldas[self.num].palette()
-                    self.paleta.setColor(QtGui.QPalette.Base, QtGui.QColor(255, 150, 150))
-                    self.listaCeldas[self.num].setPalette(self.paleta)
-                    self.listaCeldas[self.num1].setPalette(self.paleta)
+                if(self.getDisplayValue(i,j) == self.getDisplayValue(k,j)):
+                    paleta = self.listaCeldas[num].palette()
+                    paleta.setColor(QtGui.QPalette.Base, QtGui.QColor(255, 150, 150))
+                    self.listaCeldas[num].setPalette(paleta)
+                    #self.listaCeldas[num1].setPalette(paleta)
                     QtGui.QMessageBox.information(self, "Advertencia", "Este numero ya fue ingresado en la columna")
+                    self.listaCeldas[num].setText("")
                     return
                 else:
                     self.pintarTablero()
                 
     #Correccion Fila
     def CorreccionFila(self, i, j):
-        self.num = (i*9)+j
+        num = (i*9)+j
         for k in range(9):
-            self.num1 = (i*9)+k
+            num1 = (i*9)+k
             if(k != j):
-                if(self.getDisplayValue(i, j) == self.getDisplayValue(i, k)):
-                    self.paleta = self.listaCeldas[self.num].palette()
-                    self.paleta.setColor(QtGui.QPalette.Base, QtGui.QColor(255, 150, 150))
-                    self.listaCeldas[self.num].setPalette(self.paleta)
-                    self.listaCeldas[self.num1].setPalette(self.paleta)
+                if(self.getDisplayValue(i,j) == self.getDisplayValue(i,k)):
+                    paleta = self.listaCeldas[num].palette()
+                    paleta.setColor(QtGui.QPalette.Base, QtGui.QColor(255, 150, 150))
+                    self.listaCeldas[num].setPalette(paleta)
+                    self.listaCeldas[num1].setPalette(paleta)
                     QtGui.QMessageBox.information(self, "Advertencia", "Este numero ya fue ingresado en la fila")
+                    self.listaCeldas[num].setText("")
                     return
                 else:
                     self.pintarTablero()
              
 
     def correccionInGame(self):
+        
         self.numberTextTemp = QtGui.QTextEdit()
         self.numberTextTemp = self.sender()
         
-        self.inputNumber = self.toInt(self.numberTextTemp.toPlainText())
-        if ((self.inputNumber>9  or  self.inputNumber<1) and (self.inputNumber != None)):
-            QtGui.QMessageBox.information(self, "Advertencia", "El numero ingresado no es valido esta fuera del rango")
+        inputNumber = self.toInt(self.numberTextTemp.toPlainText())
+        if ((inputNumber > 9  or inputNumber < 1)):
             self.numberTextTemp.setText("")
         
-        for  i in range(9):
+        '''for i in range(9):
             for j in range(9):
-                self.num = (i*9)+j
-                if(((self.getDisplayValue(i, j) != 0) and self.listaCeldas[self.num].isEnabled())):
+                num = (i*9) + j
+                if(((self.getDisplayValue(i, j) != 0) and self.listaCeldas[num].isEnabled())):
                     self.CorreccionFila(i, j)
                     self.CorreccionColumna(i, j)
-                    self.CorreccionCuadrante(i, j)
+                    self.CorreccionCuadrante(i, j)'''
                     
             
         
