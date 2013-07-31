@@ -45,7 +45,6 @@ class MyformCargarSudoku(QtGui.QMainWindow):
 
     def volverSudoku(self):
         self.hide()
-        #self.ventanaC.obtenerNombreNivel(self.nombreJugador, self.nivelJugador)
         self.ventanaC.show()
 
     def bcargarPartida(self):

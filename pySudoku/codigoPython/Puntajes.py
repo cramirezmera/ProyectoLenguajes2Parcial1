@@ -220,5 +220,4 @@ class Ui_Puntajes(object):
 
     def retranslateUi(self, Puntajes):
         Puntajes.setWindowTitle(_translate("Puntajes", "Puntajes", None))
-        self.pVolver.setText(_translate("Puntajes", "RETROCEDER", None))
 

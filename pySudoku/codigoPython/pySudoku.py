@@ -69,9 +69,12 @@ class MyformSudoku(QtGui.QMainWindow):
     def initGui(self): 
         for i in range(9):
             for j in range(9):
+                self.num = (i*9)+j
                 self.celda = QtGui.QTextEdit(self.uiS.gridLayoutWidget)
                 self.listaCeldas.append(self.celda)
                 self.uiS.numberPad.addWidget(self.celda, i,j,1,1)
+                QtCore.QObject.connect(self.listaCeldas[self.num], QtCore.SIGNAL("textChanged(QString)"), self.correccionInGame)
+                
         self.pintarTablero()
 
 
@@ -125,7 +128,6 @@ class MyformSudoku(QtGui.QMainWindow):
                     self.listaCeldas[self.num].setText("")
                 else:
                     #Desencripta Pantilla del sudoku
-                    
                     if(self.toInt(self.val)%2 == 0):
                         self.opera = math.sqrt(self.toInt(self.val) - self.cont)
                     else:
@@ -133,7 +135,7 @@ class MyformSudoku(QtGui.QMainWindow):
                     
                     self.listaCeldas[self.num].setTextColor(QtCore.Qt.blue)
                     self.listaCeldas[self.num].setText(QtCore.QString.number(self.opera))
-                    #self.listaCeldas[self.num].setDisabled(True)
+                    self.listaCeldas[self.num].setDisabled(True)
                 self.listaCeldas[self.num].setAlignment(QtCore.Qt.AlignRight)
                 self.cuenta += 1
         self.uiS.textJugador.setText(nombre)
@@ -154,15 +156,9 @@ class MyformSudoku(QtGui.QMainWindow):
         self.show()      
 
     ## Boton comprobrar
+
+
     def comprobar(self):
-        self.sumatoriah = 0
-        self.productoh = 1
-        self.sumatoriav = 0
-        self.productov = 1
-        self.sumatoriacuad = 0
-        self.productocuad = 1
-        self.despx = 0
-        self.despy = 0
         self.banderavalida = 1
         
         #Validacion numeros del 1 al 9 en las filas
@@ -218,7 +214,7 @@ class MyformSudoku(QtGui.QMainWindow):
         self.num = (i*9)+j
         self.listaCeldas[self.num].setText(QString("%1").arg(v))
         self.listaCeldas[self.num].SetAlignment(QtCore.Qt.AlignRight)
-    
+
     ##Obtener un entero al QTextEdit
     def getDisplayValue(self, i, j):
         self.num = (i*9)+j
@@ -422,22 +418,22 @@ class MyformSudoku(QtGui.QMainWindow):
         self.niveles  = self.uiS.textNivel.text()
         
         if(self.niveles == "Juvenil"):  self.valores = plantilla1.split(",")
-        elif(self.niveles == "profesional"):  self.valores = plantilla2.split(",")
-        elif(self.niveles == "Experto"):  self.valores = plantilla3.split(",")
+        if(self.niveles == "Profesional"):  self.valores = plantilla2.split(",")
+        if(self.niveles == "Experto"):  self.valores = plantilla3.split(",")
         
         for i in range(9):
             for j in range(9):
                 self.num = (i*9)+j
                 self.celda = self.listaCeldas[self.num]
-                if((self.celda.isEnabled()) and (self.getDisplayValue(i, j) != 0) and (self.getDisplayValue(i, j) != (self.valores[self.cont].toLong()))):
-                    self.paleta = self.listaCeldas[self.num].palette()
+                if((self.celda.isEnabled()) and (self.getDisplayValue(i,j) != 0) and (self.getDisplayValue(i,j) != (self.toInt(self.valores[self.cont])))):
+                    self.paleta = self.celda.palette()
                     self.paleta.setColor(QtGui.QPalette.Base, QtGui.QColor(255,150,150))
-                    self.listaCeldas[self.num].setPalette(self.paleta)
+                    self.celda.setPalette(self.paleta)
                     
-                if((self.celda.isEnabled()) and (self.getDisplayValue(i, j) != 0) and (self.getDisplayValue(i, j) == (self.valores[self.cont].toLong()))):
-                    self.paleta = self.listaCeldas[self.num].palette()
-                    self.paleta.setColor(QtGui.QPalette.Base, QtGui.QColor(255,150,120))
-                    self.listaCeldas[self.num].setPalette(self.paleta)
+                if((self.celda.isEnabled()) and (self.getDisplayValue(i,j) != 0) and (self.getDisplayValue(i,j) == (self.toInt(self.valores[self.cont])))):
+                    self.paleta = self.celda.palette()
+                    self.paleta.setColor(QtGui.QPalette.Base, QtGui.QColor(120,255,120))
+                    self.celda.setPalette(self.paleta)
                 self.cont += 1
     
     #Encriptar Partida de Sudoku
@@ -459,7 +455,76 @@ class MyformSudoku(QtGui.QMainWindow):
                     self.numT = self.num1 + self.cont
                 matrizGuardar[self.num] = (str(chr(self.numT)))
                 print("Prueba: "+str(chr(self.numT))+"  "+str(self.numT))
+
+    #Correccion Cuadrante
+    def CorreccionCuadrante(self,i,j):
+        self.num = (i*9)+j
+        self.despx = (i/3) * 3
+        self.despy = (j/3) * 3
         
+        for self.despx in range(self.despx + 3):
+            for self.despy in range(self.despy + 3):
+                self.num1 = (self.despx * 3) + 3
+                if ((self.despy != i) and (self.despx != j)):
+                    if(self.getDisplayValue(i, j) == self.getDisplayValue(self.despx, self.despy)):
+                        self.paleta = self.listaCeldas[self.num].palette()
+                        self.paleta.setColor(QtGui.QPalette.Base, QtGui.QColor(255, 150, 150))
+                        self.listaCeldas[self.num].setPalette(self.paleta)
+                        self.listaCeldas[self.num1].setPalette(self.paleta)
+                        QtGui.QMessageBox.information(self, "Advertencia", "Este numero ya fue ingresado en el cuadrante")
+                        return
+                    else:
+                        self.pintarTablero()
+                        
+    #Correccion Columna                
+    def CorreccionColumna(self, i, j):
+        self.num = (i*9)+j
+        for k in range(9):
+            self.num1 = (k*9)+j
+            if(k != i):
+                if(self.getDisplayValue(i, j) == self.getDisplayValue(k, j)):
+                    self.paleta = self.listaCeldas[self.num].palette()
+                    self.paleta.setColor(QtGui.QPalette.Base, QtGui.QColor(255, 150, 150))
+                    self.listaCeldas[self.num].setPalette(self.paleta)
+                    self.listaCeldas[self.num1].setPalette(self.paleta)
+                    QtGui.QMessageBox.information(self, "Advertencia", "Este numero ya fue ingresado en la columna")
+                    return
+                else:
+                    self.pintarTablero()
                 
-                
-                
+    #Correccion Fila
+    def CorreccionFila(self, i, j):
+        self.num = (i*9)+j
+        for k in range(9):
+            self.num1 = (i*9)+k
+            if(k != j):
+                if(self.getDisplayValue(i, j) == self.getDisplayValue(i, k)):
+                    self.paleta = self.listaCeldas[self.num].palette()
+                    self.paleta.setColor(QtGui.QPalette.Base, QtGui.QColor(255, 150, 150))
+                    self.listaCeldas[self.num].setPalette(self.paleta)
+                    self.listaCeldas[self.num1].setPalette(self.paleta)
+                    QtGui.QMessageBox.information(self, "Advertencia", "Este numero ya fue ingresado en la fila")
+                    return
+                else:
+                    self.pintarTablero()
+             
+
+    def correccionInGame(self):
+        self.numberTextTemp = QtGui.QTextEdit()
+        self.numberTextTemp = self.sender()
+        
+        self.inputNumber = self.toInt(self.numberTextTemp.toPlainText())
+        if ((self.inputNumber>9  or  self.inputNumber<1) and (self.inputNumber != None)):
+            QtGui.QMessageBox.information(self, "Advertencia", "El numero ingresado no es valido esta fuera del rango")
+            self.numberTextTemp.setText("")
+        
+        for  i in range(9):
+            for j in range(9):
+                self.num = (i*9)+j
+                if(((self.getDisplayValue(i, j) != 0) and self.listaCeldas[self.num].isEnabled())):
+                    self.CorreccionFila(i, j)
+                    self.CorreccionColumna(i, j)
+                    self.CorreccionCuadrante(i, j)
+                    
+            
+        
