@@ -457,7 +457,7 @@ class MyformSudoku(QtGui.QMainWindow):
         
         for despy in range(despy_0, despy_0 + 3):
             for despx in range(despx_0, despx_0 + 3):
-                num1 = (despy * 3) + despx
+                num1 = (despy * 9) + despx
                 if ((despy != i) and (despx != j)):
                     if(self.getDisplayValue(i,j) == self.getDisplayValue(despy, despx)):
                         paleta = self.listaCeldas[num].palette()
@@ -465,7 +465,7 @@ class MyformSudoku(QtGui.QMainWindow):
                         self.listaCeldas[num].setPalette(paleta)
                         self.listaCeldas[num1].setPalette(paleta)
                         QtGui.QMessageBox.information(self, "Advertencia", "Este numero ya fue ingresado en el cuadrante")
-                        self.listaCeldas[num].setText("")
+                       
                         return
                     else:
                         self.pintarTablero()
@@ -473,16 +473,18 @@ class MyformSudoku(QtGui.QMainWindow):
     #Correccion Columna                
     def CorreccionColumna(self, i, j):
         num = (i*9)+j
+		
         for k in range(9):
-            num1 = (k*9)+j
+            
             if(k != i):
                 if(self.getDisplayValue(i,j) == self.getDisplayValue(k,j)):
                     paleta = self.listaCeldas[num].palette()
                     paleta.setColor(QtGui.QPalette.Base, QtGui.QColor(255, 150, 150))
                     self.listaCeldas[num].setPalette(paleta)
-                    #self.listaCeldas[num1].setPalette(paleta)
+				
+                    self.listaCeldas[(k*9)+j].setPalette(paleta)
                     QtGui.QMessageBox.information(self, "Advertencia", "Este numero ya fue ingresado en la columna")
-                    self.listaCeldas[num].setText("")
+               
                     return
                 else:
                     self.pintarTablero()
@@ -499,28 +501,28 @@ class MyformSudoku(QtGui.QMainWindow):
                     self.listaCeldas[num].setPalette(paleta)
                     self.listaCeldas[num1].setPalette(paleta)
                     QtGui.QMessageBox.information(self, "Advertencia", "Este numero ya fue ingresado en la fila")
-                    self.listaCeldas[num].setText("")
+                   
                     return
                 else:
                     self.pintarTablero()
              
 
     def correccionInGame(self):
-        
-        self.numberTextTemp = QtGui.QTextEdit()
-        self.numberTextTemp = self.sender()
-        
-        inputNumber = self.toInt(self.numberTextTemp.toPlainText())
-        if ((inputNumber > 9  or inputNumber < 1)):
-            self.numberTextTemp.setText("")
-        
-        '''for i in range(9):
-            for j in range(9):
-                num = (i*9) + j
-                if(((self.getDisplayValue(i, j) != 0) and self.listaCeldas[num].isEnabled())):
-                    self.CorreccionFila(i, j)
-                    self.CorreccionColumna(i, j)
-                    self.CorreccionCuadrante(i, j)'''
+
+			
+			for i in range(9):
+				for j in range(9):
+					num = (i*9) + j
+					if(((self.getDisplayValue(i, j) != 0 or self.listaCeldas[num].toPlainText() != "") and self.listaCeldas[num].isEnabled())):
+						if ((self.getDisplayValue(i, j) > 9  or self.getDisplayValue(i, j) < 1)):
+							QtGui.QMessageBox.information(self, "Advertencia", "Este numero no esta dentro del rango permitido")
+							self.listaCeldas[num].setText("")		
+							
+					if(((self.getDisplayValue(i, j) != 0) and self.listaCeldas[num].isEnabled())):
+						self.CorreccionFila(i, j)
+						self.CorreccionColumna(i, j)
+						self.CorreccionCuadrante(i, j)
+						
                     
             
         
