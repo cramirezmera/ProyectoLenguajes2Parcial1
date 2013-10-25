@@ -1,0 +1,4 @@
+INDEX VERSION 1.126+C:\Users\Ramirez\Documents\GitHub\ProyectoLenguajes2Parcial1\pySudoku\.metadata\.plugins\org.eclipse.jdt.core
+1153313873.index
+3243038501.index
+24617650.index

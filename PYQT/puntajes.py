@@ -4,7 +4,7 @@
 #
 # Created: Fri Jul 12 13:01:18 2013
 #      by: PyQt4 UI code generator 4.10
-#
+#asdasd
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
